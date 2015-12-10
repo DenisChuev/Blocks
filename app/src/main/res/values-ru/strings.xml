@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Блоки</string>
+    <string name="new_game">Новая игра</string>
+    <string name="pause">Пауза</string>
+    <string name="play">Играть</string>
+    <string name="score">Очки: </string>
+    <string name="record">Рекорд:</string>
+    <string name="exit">Удерживайте для выхода!</string>
+</resources>

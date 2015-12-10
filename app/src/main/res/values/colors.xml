@@ -1,0 +1,16 @@
+<resources>
+    <color name="frame">#FF7043</color>
+    <color name="colorPrimary">#ff5722</color>
+    <color name="colorPrimaryDark">#e64a19</color>
+    <color name="colorAccent">#0091ea</color>
+    <color name="background">#fafafa</color>
+
+    <!--Colors of shapes-->
+    <color name="Cian">#00CED1</color>
+    <color name="Blue">#3a3aff</color>
+    <color name="Orange">#FFA500</color>
+    <color name="Green">#32CD32</color>
+    <color name="Red">#dc1623</color>
+    <color name="Purple">#802877</color>
+    <color name="Yellow">#ffd700</color>
+</resources>

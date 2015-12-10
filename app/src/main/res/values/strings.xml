@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Blocks</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="new_game">New Game</string>
+    <string name="score">Score:</string>
+    <string name="record">Record:</string>
+    <string name="exit">Hold to exit!</string>
+</resources>
