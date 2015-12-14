@@ -19,16 +19,16 @@ import android.widget.Toast;
 
 public class BlocksActivity extends AppCompatActivity implements OnTouchListener {
 
-    Handler handler = new Handler();
-    private BlocksView view;
-    private MenuItem play_pause;
-    private Animation anim_alpha;
-    private Toolbar toolbar;
-    private SharedPreferences pref;
+    private final Handler handler = new Handler();
+    private int action; //0-not move    1-move left     2-move right    3-move figureDown    4-rotate
     private int numMoves, numMadeMoves;
     private boolean running = true;
-    private int action; //0-not move    1-move left     2-move right    3-move down    4-rotate
-    Runnable runnable = new Runnable() {
+    private BlocksView view;
+    private MenuItem play_pause;
+    private Animation animation;
+    private Toolbar toolbar;
+    private SharedPreferences pref;
+    private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
             try {
@@ -42,10 +42,10 @@ public class BlocksActivity extends AppCompatActivity implements OnTouchListener
                 toolbar.setTitle(getString(R.string.score) + " " + view.game.getScore());
                 toolbar.setSubtitle(getString(R.string.record) + " " + record);
                 if (action != 0) {
-                    if (action == 1) view.game.moveLeft();
-                    if (action == 2) view.game.moveRight();
-                    if (action == 3) view.game.moveDown();
-//                    if (action == 4) view.game.rotateRight();
+                    if (action == 1) Game.figure.left();
+                    else if (action == 2) Game.figure.right();
+                    else if (action == 3) view.game.figureDown();
+//                    else if (action == 4) view.game.rotate();
                     numMadeMoves++;
                 }
             } catch (NullPointerException ignored) {
@@ -60,7 +60,7 @@ public class BlocksActivity extends AppCompatActivity implements OnTouchListener
         setContentView(R.layout.activity_main);
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        anim_alpha = AnimationUtils.loadAnimation(this, R.anim.anim_alpha);
+        animation = AnimationUtils.loadAnimation(this, R.anim.anim_alpha);
         setSupportActionBar(toolbar);
         ImageButton left = (ImageButton) findViewById(R.id.left_button);
         ImageButton right = (ImageButton) findViewById(R.id.right_button);
@@ -140,18 +140,18 @@ public class BlocksActivity extends AppCompatActivity implements OnTouchListener
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     if (v.getId() == R.id.left_button) action = 1;
-                    if (v.getId() == R.id.right_button) action = 2;
-                    if (v.getId() == R.id.down_button) action = 3;
-//                    if (v.getId() == R.id.rotate_button) action = 4;
+                    else if (v.getId() == R.id.right_button) action = 2;
+                    else if (v.getId() == R.id.down_button) action = 3;
+//                    else if (v.getId() == R.id.rotate_button) action = 4;
                     numMoves++;
                     break;
                 case MotionEvent.ACTION_UP:
-                    v.startAnimation(anim_alpha);
+                    v.startAnimation(animation);
                     if (numMoves > numMadeMoves) {
-                        if (v.getId() == R.id.left_button) view.game.moveLeft();
-                        if (v.getId() == R.id.right_button) view.game.moveRight();
-                        if (v.getId() == R.id.down_button) view.game.moveDown();
-                        if (v.getId() == R.id.rotate_button) view.game.rotateRight();
+                        if (v.getId() == R.id.left_button) Game.figure.left();
+                        else if (v.getId() == R.id.right_button) Game.figure.right();
+                        else if (v.getId() == R.id.down_button) view.game.figureDown();
+                        else if (v.getId() == R.id.rotate_button) Game.figure.rotate();
                     }
                     action = numMadeMoves = numMoves = 0;
                     break;

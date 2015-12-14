@@ -13,19 +13,23 @@ import android.view.SurfaceView;
 public class BlocksView extends SurfaceView implements SurfaceHolder.Callback {
 
     private final static int CELLS = 30;
+    private final Paint paint;
+    private final int background;
+    private final int frame;
+    private final String[] figureColors;
     Game game;
     private int width, height, sizeCell, rows, cols;
     private float indent_h, indent_w;
     private boolean isUpdatedSizes = false;
-    private Paint paint;
-    private int background, frame;
     private DrawThread thread;
+
 
     public BlocksView(Context context, AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
         background = ContextCompat.getColor(context, R.color.background);
         frame = ContextCompat.getColor(context, R.color.frame);
+        figureColors = context.getResources().getStringArray(R.array.figure_colors);
         getHolder().addCallback(this);
     }
 
@@ -57,10 +61,10 @@ public class BlocksView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     protected void onDraw(Canvas canvas) {
         drawBackground(canvas);
-        drawShape(canvas);
+        drawField(canvas);
     }
 
-    void updateSizes() {
+    private void updateSizes() {
         width = getWidth();
         height = getHeight();
         sizeCell = (width + height) / CELLS;
@@ -72,7 +76,7 @@ public class BlocksView extends SurfaceView implements SurfaceHolder.Callback {
         isUpdatedSizes = true;
     }
 
-    void drawBackground(Canvas canvas) {
+    private void drawBackground(Canvas canvas) {
         paint.setColor(frame);
         canvas.drawRect(0, 0, width, indent_h, paint);
         canvas.drawRect(width - indent_w, 0, width, height, paint);
@@ -82,16 +86,18 @@ public class BlocksView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawRect(indent_w, indent_h, width - indent_w, height - indent_h, paint);
     }
 
-    void drawShape(Canvas canvas) {
-        synchronized (game.field) {
+    private void drawField(Canvas canvas) {
+        synchronized (Game.field.matrix) {
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
-                    paint.setColor(Color.parseColor(Shapes.COLORS[game.field[i][j]]));
-                    float x1 = indent_w + j * sizeCell + 1;
-                    float y1 = indent_h + i * sizeCell + 1;
-                    float x2 = indent_w + (j + 1) * sizeCell - 1;
-                    float y2 = indent_h + (i + 1) * sizeCell - 1;
-                    canvas.drawRect(x1, y1, x2, y2, paint);
+                    if (Game.field.matrix[i][j] != 0) {
+                        paint.setColor(Color.parseColor(figureColors[Game.field.matrix[i][j] - 1]));
+                        float x1 = indent_w + j * sizeCell + 1;
+                        float y1 = indent_h + i * sizeCell + 1;
+                        float x2 = indent_w + (j + 1) * sizeCell - 1;
+                        float y2 = indent_h + (i + 1) * sizeCell - 1;
+                        canvas.drawRect(x1, y1, x2, y2, paint);
+                    }
                 }
             }
         }
